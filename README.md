@@ -13,7 +13,7 @@ This is a **Full-Stack Coupon Distribution System** where:
 
 ### **1️⃣ Clone the Project**
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/Kakrote/coupons-system>
 cd coupon-system
 ```
 
