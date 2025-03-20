@@ -46,7 +46,7 @@ const adminLogin=async(req,res)=>{
             username:admin.username
         }
         const token=jwt.sign(payLord,process.env.JWT_SECRET,{expiresIn:"1h"})
-        console.log(token)
+        // console.log(token)
         res.json({token})
 
     }
@@ -110,4 +110,29 @@ const userHistoy=async(req,res)=>{
     }
 }
 
-module.exports={adminRegister,adminLogin,getCoupons,addCoupon,deleteCoupon,userHistoy}
+// updating coupons
+const updateCouponStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+        const coupon = await Coupon.findById(req.params.id);
+
+        if (!coupon) {
+            return res.status(404).json({ message: "Coupon not found!" });
+        }
+
+        if (!["available", "disabled"].includes(status)) {
+            return res.status(400).json({ message: "Invalid status. Use 'available' or 'disabled'." });
+        }
+
+        coupon.status = status;
+        await coupon.save();
+
+        res.json({ message: `Coupon ${status === "available" ? "enabled" : "disabled"} successfully!` });
+    } catch (err) {
+        console.error("Update Coupon Status Error:", err);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+
+module.exports={adminRegister,adminLogin,getCoupons,addCoupon,deleteCoupon,userHistoy,updateCouponStatus}

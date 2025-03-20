@@ -2,6 +2,7 @@ const Coupon = require("../model/Coupons");
 const UserClaim = require("../model/UserClaim");
 
 const claimCoupon = async (req, res) => {
+    console.log(req.body)
     try {
         const userIp = req.ip; // Users IP Address
         const sessionId = req.cookies.sessionId || Math.random().toString(36).substr(2, 9); // Generate session ID if not exists
@@ -10,7 +11,7 @@ const claimCoupon = async (req, res) => {
         const lastClaim = await UserClaim.findOne({ ip: userIp }).sort({ claimedAt: -1 });
 
         if (lastClaim) {
-            const diff = (Date.now() - new Date(lastClaim.claimedAt)) / (1000 * 60 * 60); // Convert ms to hours
+            const diff = (Date.now() - new Date(lastClaim.claimedAt)) / (1000 * 60*60); // Convert ms to hours
             if (diff < 24) {
                 return res.status(400).json({ message: "You can claim only once in 24 hours." });
             }

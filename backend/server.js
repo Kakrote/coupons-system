@@ -1,6 +1,7 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
+const cors=require('cors')
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
@@ -8,6 +9,11 @@ const adminRoutes = require('./routes/adminRoutes');
 dotenv.config();
 app=express()
 connectDB()
+app.use(cors({
+    origin: "http://localhost:3000",  // ✅ Only allow frontend requests
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true // ✅ Allow cookies & authentication headers
+  }))
 app.use(express.json())
 app.use(cookieParser())
 

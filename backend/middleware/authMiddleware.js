@@ -9,7 +9,7 @@ const authMiddleware= async (req,res,next)=>{
     )
     try{
         token=req.headers.authorization.split(' ')[1]
-        console.log(token)
+        console.log(token) // checking if it checking the token
         const decoded=jwt.verify(token,process.env.JWT_SECRET)
         req.admin=await Admin.findById(decoded.adminId).select('-password')
         next()
@@ -19,7 +19,7 @@ const authMiddleware= async (req,res,next)=>{
         res.status(401).json({messg:"Invalid token"})
     }
     if(!token){
-        res.status(401).json({messg:"Not authorized"})
+        res.status(401).json({messg:"Not authorized!"})
     }
 }
 module.exports=authMiddleware
