@@ -10,7 +10,7 @@ dotenv.config();
 app=express()
 connectDB()
 app.use(cors({
-    origin: "https://coupons-system.vercel.app/",  // ✅ Only allow frontend requests
+    origin: "https://coupons-system.vercel.app",  // ✅ Only allow frontend requests
     methods: "GET,POST,PUT,DELETE",
     credentials: true // ✅ Allow cookies & authentication headers
   }))
