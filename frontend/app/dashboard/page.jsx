@@ -123,9 +123,9 @@ const Dashboard = () => {
       {claimHistory.length === 0 ? (
         <p className="text-center text-gray-500">No claims yet.</p>
       ) : (
-        <table className="w-full mt-2 border-collapse border border-gray-300">
+        <table className="w-full mt-2 border-collapse border border-gray-300 shadow-md shadow-amber-400/80">
           <thead>
-            <tr className="bg-gray-200">
+            <tr className="bg-transparent">
               <th className="border p-2">IP Address</th>
               <th className="border p-2">Session ID</th>
               <th className="border p-2">Coupon Code</th>
