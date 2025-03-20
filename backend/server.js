@@ -9,7 +9,7 @@ const adminRoutes = require('./routes/adminRoutes');
 dotenv.config();
 app=express()
 connectDB()
-app.set("trust proxy", 1)
+app.set("trust proxy", true)
 app.use(cors({
     origin: "https://coupons-system.vercel.app",  // ✅ Only allow frontend requests
     methods: "GET,POST,PUT,DELETE",
