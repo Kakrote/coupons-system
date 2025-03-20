@@ -101,7 +101,7 @@ const deleteCoupon=async(req,res)=>{
 // get all claims history
 const userHistoy=async(req,res)=>{
     try{
-        const claims=await UserClaim.find().populate('couponId','code')
+        const claims=await UserClaim.find().populate('couponId','code').select('ip sessionId couponId claimedAt');
         res.json(claims)
     }
     catch(err){
