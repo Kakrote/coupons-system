@@ -137,7 +137,7 @@ const Dashboard = () => {
               <tr key={index} className="border">
                 <td className="p-2 border">{claim.ip}</td>
                 <td className="p-2 border">{claim.sessionId}</td>
-                <td className="p-2 border">{claim.couponId.code}</td>
+                <td className="p-2 border">{claim.couponId ? claim.couponId.code:"Unknown"}</td>
                 <td className="p-2 border">{new Date(claim.claimedAt).toLocaleString()}</td>
               </tr>
             ))}
