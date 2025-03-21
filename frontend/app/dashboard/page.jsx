@@ -8,6 +8,8 @@ const Dashboard = () => {
   const [coupons, setCoupons] = useState([]);
   const [couponCode, setCouponCode] = useState("");
   const [claimHistory, setClaimHistory] = useState([]); // ✅ Added User Claim History State
+  const [loading, setLoading] = useState(false)
+  const [loadingAction, setLoadingAction] = useState(null)
 
   useEffect(() => {
     fetchCoupons();
@@ -16,15 +18,20 @@ const Dashboard = () => {
 
   const fetchCoupons = async () => {
     try {
+      setLoading(true)
       const response = await API.get("/admin/coupons");
       setCoupons(response.data);
     } catch (error) {
       toast.error("Error fetching coupons");
     }
+    finally{
+      setLoading(false)
+    }
   };
 
   const addCoupon = async () => {
     if (!couponCode) return toast.error("Enter a coupon code!");
+    setLoadingAction("add")
     
     try {
       await API.post("/admin/addcoupon", { code: couponCode });
@@ -34,11 +41,14 @@ const Dashboard = () => {
     } catch (error) {
       toast.error("Failed to add coupon");
     }
+    finally{
+      setLoadingAction(null)
+    }
   };
 
   const toggleCouponStatus = async (id, currentStatus) => {
     const newStatus = currentStatus === "available" ? "disabled" : "available";
-
+    setLoadingAction(`toggle-${id}`)
     try {
         await API.put(`/admin/coupons/${id}`, { status: newStatus });
         toast.success(`Coupon ${newStatus === "available" ? "enabled" : "disabled"}!`);
@@ -46,16 +56,23 @@ const Dashboard = () => {
     } catch (error) {
         toast.error("Failed to update coupon status");
     }
+    finally{
+      setLoadingAction(null)
+    }
   };
 
   const deleteCoupon = async (id) => {
+    setLoadingAction(`delete-${id}`);
     try {
       await API.delete(`/admin/deletecoupon/${id}`);
       toast.success("Coupon Deleted!");
       fetchCoupons();
     } catch (error) {
       toast.error("Failed to delete coupon");
+    }finally {
+      setLoadingAction(null);
     }
+
   };
 
   // ✅ Fetch User Claim History
@@ -85,7 +102,7 @@ const Dashboard = () => {
           onClick={addCoupon}
           className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded"
         >
-          Add Coupon
+          {loadingAction=='add'?"Adding...":"Add Coupon"}
         </button>
       </div>
 
@@ -102,16 +119,18 @@ const Dashboard = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => toggleCouponStatus(coupon._id, coupon.status)}
-                className={`px-3 py-1 rounded text-white ${coupon.status === "available" ? "bg-yellow-500 hover:bg-yellow-700" : "bg-green-500 hover:bg-green-700"}`}
+                disabled={loadingAction===`toggle-${coupon._id}`}
+                className={`px-3 py-1 rounded text-white disabled:bg-yellow-200 ${coupon.status === "available" ? "bg-yellow-500 hover:bg-yellow-700" : "bg-green-500 hover:bg-green-700"}`}
               >
-                {coupon.status === "available" ? "Disable" : "Enable"}
+                {loadingAction===`toggle-${coupon._id}`?"updating": coupon.status === "available" ? "Disable" : "Enable"}
               </button>
 
               <button
                 onClick={() => deleteCoupon(coupon._id)}
-                className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded"
+                disabled={loadingAction===`delete-${coupon._id}`}
+                className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded disabled:bg-red-300"
               >
-                Delete
+                {loadingAction===`delete-${coupon._id}`?"Deleting...":"Delete"}
               </button>
             </div>
           </li>
